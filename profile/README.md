@@ -22,18 +22,20 @@ Cubefin consists of three main components working together to collect, analyze, 
 graph LR
     subgraph "Kubernetes Cluster"
         A[Collector] -->|Metrics| B[VictoriaMetrics]
-        C[Optimizer] -->|Actions| K[K8s API]
+        B -.->|PromQL| D[Agent]
+        D -->|Aggregated Data| S[Cubefin Server]
+        S -->|Commands| C[Optimizer]
+        C -->|Actions| K[K8s API]
         B -->|PromQL| C
     end
     
     subgraph "Cubefin Cloud"
-        B -->|Remote Write| S[Cubefin Server]
-        S -->|Commands| C
         S -->|Dashboard| U[User]
     end
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style C fill:#bfb,stroke:#333,stroke-width:2px
+    style D fill:#fbb,stroke:#333,stroke-width:2px
     style S fill:#bbf,stroke:#333,stroke-width:2px
 ```
 
