@@ -13,6 +13,7 @@
   <a href="#overview">Overview</a> •
   <a href="#key-capabilities">Key Capabilities</a> •
   <a href="#core-services">Core Services</a> •
+  <a href="#coming-soon">Coming Soon</a> •
   <a href="#architecture">Architecture</a> •
   <a href="#getting-started">Getting Started</a> •
   <a href="#demo">Demo</a>
@@ -139,6 +140,16 @@
 ```
 📦 ghcr.io/cubefin/auth
 ```
+
+---
+
+## Coming Soon
+
+| 서비스 | 설명 | 상태 |
+|--------|------|------|
+| **Lens** | 통합 옵저버빌리티 - Logs, Traces, Metrics 통합 뷰 | 🚧 개발 예정 |
+| **Flow** | CI/CD 자동화 - 파이프라인 오케스트레이션 | 🚧 개발 예정 |
+| **Genesis** | 인프라 프로비저닝 - VM 생성, K8s 클러스터 자동화 | 🚧 개발 예정 |
 
 ---
 
