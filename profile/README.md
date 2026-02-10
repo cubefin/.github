@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/cubefin/docs/main/assets/logo.png" alt="CubeFin Logo" width="150"/>
+  <img src="https://raw.githubusercontent.com/cubefin/.github/main/assets/logo.png" alt="CubeFin Logo" width="200"/>
 </p>
 
 <h1 align="center">CubeFin</h1>
@@ -10,9 +10,25 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/cubefin/docs">Documentation</a> •
-  <a href="https://github.com/cubefin/helm-charts">Helm Charts</a>
+  <a href="#overview">Overview</a> •
+  <a href="#key-capabilities">Key Capabilities</a> •
+  <a href="#core-services">Core Services</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#getting-started">Getting Started</a>
 </p>
+
+---
+
+## Overview
+
+**CubeFin**은 Kubernetes 환경에서 **FinOps(Financial Operations)** 를 실현하는 AI 기반 플랫폼입니다.
+
+- 멀티 클러스터 메트릭 수집 및 분석
+- Private LLM을 활용한 자연어 인사이트 제공
+- 비용 최적화 권장 및 자동화
+- 엔터프라이즈급 인증/인가 체계
+
+> 모든 데이터는 고객 환경 내에서 처리되며, 외부로 유출되지 않습니다.
 
 ---
 
@@ -22,9 +38,106 @@
 |------|------|------|
 | **메트릭 수집** | Prometheus 호환 | 기존 모니터링 생태계와 완벽 통합, 38+ K8s 메트릭 수집 |
 | **AI 분석** | Private LLM | 데이터가 외부로 나가지 않는 온프레미스 AI 분석 |
-| **권한 관리** | ReBAC | Google Zanzibar 개념 기반, 복잡한 조직 구조에 최적화 |
+| **권한 관리** | Relationship-Based Access Control | Google Zanzibar 개념 기반, 복잡한 조직 구조에 최적화 |
+| **벡터 검색** | RAG (Retrieval-Augmented Generation) | 과거 분석 이력 기반 컨텍스트 인식 응답 |
 
-> 모든 데이터는 고객 환경 내에서 처리되며, 외부로 유출되지 않습니다.
+### 권한 관리 (ReBAC)
+
+전통적인 역할 기반(RBAC)을 넘어, **관계 기반 접근 제어**를 제공합니다.
+
+```
+"사용자 A는 팀 B의 멤버이고, 팀 B는 부서 C에 속하며, 부서 C는 프로젝트 D에 접근 가능하다"
+→ 사용자 A는 프로젝트 D에 접근할 수 있는가? ✓
+```
+
+**해결하는 문제:**
+- 복잡한 조직 계층 구조 (그룹 → 하위그룹 → 리소스)
+- 동적 권한 위임 및 상속
+- 실시간 권한 체크 (밀리초 단위 응답)
+
+---
+
+## Core Services
+
+### 1. Platform
+
+**중앙 관리 콘솔 및 API 서버**
+
+멀티 클러스터를 통합 관리하는 대시보드와 백엔드 서비스입니다.
+
+| 컴포넌트 | 역할 |
+|----------|------|
+| **Console** | React 기반 웹 대시보드, 클러스터 현황/비용 시각화 |
+| **Server** | Quarkus 기반 REST API, 메트릭 집계/분석/저장 |
+
+**주요 기능:**
+- 멀티 클러스터 통합 뷰
+- 비용 분석 및 트렌드 시각화
+- 리소스 최적화 권장사항 표시
+- Agent 관리 및 설정 배포
+
+```
+📦 ghcr.io/cubefin/platform
+```
+
+---
+
+### 2. Agent
+
+**Kubernetes 클러스터 모니터링 에이전트**
+
+클러스터에 배포되어 실시간 메트릭을 수집하고 중앙 서버와 통신합니다.
+
+| 모듈 | 역할 |
+|------|------|
+| **Core** | 중앙 서버 통신, 설정 관리, 모듈 조율 |
+| **Collector** | 인프라/애플리케이션 메트릭 수집 (Prometheus 호환) |
+| **Optimizer** | 실시간 최적화 분석, VPA 권장, 노드 효율성 분석 |
+
+```
+📦 ghcr.io/cubefin/agent
+```
+
+---
+
+### 3. Insight
+
+**Private LLM 기반 AI 분석 엔진**
+
+수집된 메트릭을 AI로 분석하여 자연어 인사이트를 제공합니다.
+
+| 기능 | 설명 |
+|------|------|
+| **자연어 질의** | "CPU 높은 Pod는?" 같은 질문에 답변 |
+| **이상 탐지** | 메모리 초과, CPU 스파이크, 재시작 패턴 감지 |
+| **최적화 권장** | 비용 절감, 리소스 조정 제안 |
+| **RAG** | 벡터 DB 기반 컨텍스트 인식 응답 |
+
+```
+📦 ghcr.io/cubefin/insight
+```
+
+---
+
+### 4. Auth
+
+**통합 인증/인가 플랫폼**
+
+엔터프라이즈 환경을 위한 보안 게이트웨이입니다.
+
+| 컴포넌트 | 역할 |
+|----------|------|
+| **Edge Gateway** | JWT 검증, 트래픽 진입점, 프로토콜 변환 |
+| **Age (Access Governance Engine)** | ReBAC 기반 세분화된 권한 관리 |
+
+**특징:**
+- Vendor Agnostic: Keycloak, Auth0, Cognito 등 모든 OIDC 호환 IdP 지원
+- Cypher 쿼리 기반 Graph DB로 복잡한 조직 구조 권한 처리
+- Edge Gateway: API Gateway + 인증/인가 통합, 마이크로서비스 진입 전 검증 완료
+
+```
+📦 ghcr.io/cubefin/auth
+```
 
 ---
 
@@ -32,50 +145,56 @@
 
 ```mermaid
 graph TB
-    subgraph Hub ["🏢 Hub Cluster"]
-        Platform["🖥️ Platform"]
-        Auth["🔐 Auth"]
+    Platform["🖥️ CubeFin Platform<br/>(Central Dashboard)"]
+
+    Platform --> Auth
+    Platform --> Insight
+    Platform --> Agent
+
+    subgraph Auth["🔐 Auth Service"]
+        Edge["Edge Gateway<br/>(API Gateway)"]
+        Age["Age Engine<br/>(ReBAC)"]
+        GraphDB[(Graph DB)]
+        Edge --> Age
+        Age --> GraphDB
     end
 
-    subgraph Target ["☁️ Target Clusters"]
-        Agent["📊 Agent"]
-        Insight["🤖 Insight"]
-        VM[("VictoriaMetrics")]
-        Insight --> VM
+    subgraph Insight["🤖 Insight Service"]
+        LLM["LLM Engine"]
+        RAG["RAG Engine"]
+        VectorDB[(Vector DB)]
+        LLM --> RAG
+        RAG --> VectorDB
     end
 
-    Agent -->|Metrics| Platform
+    subgraph Agent["📊 Agent"]
+        Core["Core"]
+        Collector["Collector"]
+        Optimizer["Optimizer"]
+        K8s[("K8s Cluster")]
+        Core --> Collector
+        Core --> Optimizer
+        Collector --> K8s
+    end
 ```
 
 ---
 
-## Core Services
+## Getting Started
 
-| Service | Description | Repository |
-|---------|-------------|------------|
-| **Platform** | 중앙 관리 콘솔 및 API 서버 | [cubefin/platform](https://github.com/cubefin/platform) |
-| **Agent** | K8s 메트릭 수집 에이전트 | [cubefin/agent](https://github.com/cubefin/agent) |
-| **Insight** | Private LLM 기반 AI 분석 | [cubefin/insight](https://github.com/cubefin/insight) |
-| **Auth** | 통합 인증/인가 (Edge Gateway + ReBAC) | [cubefin/auth](https://github.com/cubefin/auth) |
+모든 서비스는 **Helm Chart**를 통해 간편하게 설치할 수 있습니다.
 
----
-
-## Quick Start
-
-```bash
-# Hub 클러스터
-helm install cubefin-platform oci://ghcr.io/cubefin/cubefin-platform -n cubefin --create-namespace
-helm install cubefin-auth oci://ghcr.io/cubefin/cubefin-auth -n cubefin
-
-# 타겟 클러스터
-helm install cubefin-cluster oci://ghcr.io/cubefin/cubefin-cluster -n cubefin --create-namespace
-helm install cubefin-insight oci://ghcr.io/cubefin/cubefin-insight -n cubefin
-```
+| Chart | 설명 | 설치 대상 |
+|-------|------|-----------|
+| `cubefin-platform` | 중앙 관리 서버 (Console, API) | Hub 클러스터 |
+| `cubefin-cluster` | 메트릭 수집 스택 (Agent, Collector, Optimizer) | 타겟 클러스터 |
+| `cubefin-insight` | AI 분석 엔진 | 타겟 클러스터 |
+| `cubefin-auth` | 인증/인가 서비스 | Hub 클러스터 |
 
 👉 **설치 가이드**: [cubefin/helm-charts](https://github.com/cubefin/helm-charts)
 
 ---
 
-<p align="center">
-  <sub>Copyright © 2026 CubeFin. All rights reserved.</sub>
-</p>
+## License
+
+Copyright © 2026 CubeFin. All rights reserved.
