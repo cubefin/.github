@@ -1,78 +1,81 @@
-<div align="center">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/cubefin/docs/main/assets/logo.png" alt="CubeFin Logo" width="150"/>
+</p>
 
-# Cubefin
-**Cloud Native FinOps & Optimization Platform**
+<h1 align="center">CubeFin</h1>
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Website](https://img.shields.io/badge/website-cubefin.io-green)](https://cubefin.io)
-[![Slack](https://img.shields.io/badge/slack-join_community-purple)](https://slack.cubefin.io)
+<p align="center">
+  <strong>AI-Powered Kubernetes FinOps Platform</strong><br/>
+  클라우드 비용 최적화와 클러스터 운영 자동화를 위한 통합 플랫폼
+</p>
 
-**Cubefin** is an open-source platform designed to provide visibility into Kubernetes costs and automate resource optimization.
-From startups to enterprises, Cubefin helps you run your clusters efficiently.
+<p align="center">
+  <a href="https://github.com/cubefin/docs">Documentation</a> •
+  <a href="https://github.com/cubefin/helm-charts">Helm Charts</a>
+</p>
 
 ---
 
-</div>
+## Key Capabilities
 
-## 🏗️ Architecture
+| 영역 | 기능 | 설명 |
+|------|------|------|
+| **메트릭 수집** | Prometheus 호환 | 기존 모니터링 생태계와 완벽 통합, 38+ K8s 메트릭 수집 |
+| **AI 분석** | Private LLM | 데이터가 외부로 나가지 않는 온프레미스 AI 분석 |
+| **권한 관리** | ReBAC | Google Zanzibar 개념 기반, 복잡한 조직 구조에 최적화 |
 
-Cubefin consists of three main components working together to collect, analyze, and optimize your Kubernetes resources.
+> 모든 데이터는 고객 환경 내에서 처리되며, 외부로 유출되지 않습니다.
+
+---
+
+## Architecture
 
 ```mermaid
-graph LR
-    subgraph "Kubernetes Cluster"
-        A[Collector] -->|Metrics| B[VictoriaMetrics]
-        B -.->|PromQL| D[Agent]
-        D -->|Aggregated Data| S[Cubefin Server]
-        S -->|Commands| C[Optimizer]
-        C -->|Actions| K[K8s API]
-        B -->|PromQL| C
-    end
-    
-    subgraph "Cubefin Cloud"
-        S -->|Dashboard| U[User]
+graph TB
+    subgraph Hub ["🏢 Hub Cluster"]
+        Platform["🖥️ Platform"]
+        Auth["🔐 Auth"]
     end
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bfb,stroke:#333,stroke-width:2px
-    style D fill:#fbb,stroke:#333,stroke-width:2px
-    style S fill:#bbf,stroke:#333,stroke-width:2px
+    subgraph Target ["☁️ Target Clusters"]
+        Agent["📊 Agent"]
+        Insight["🤖 Insight"]
+        VM[("VictoriaMetrics")]
+        Insight --> VM
+    end
+
+    Agent -->|Metrics| Platform
 ```
-
-## 📦 Core Components
-
-| Component | Description | Status |
-|-----------|-------------|--------|
-| **[Collector](https://github.com/cubefin/collector)** | Lightweight metrics collector based on Prometheus/VictoriaMetrics. | ✅ Stable |
-| **[Agent](https://github.com/cubefin/agent)** | Manages cluster registration and communication with the central server. | ✅ Stable |
-| **[Optimizer](https://github.com/cubefin/optimizer)** | Automated resource optimization agent (Right-sizing, Scaling). | ✅ Stable |
-| **[Helm Charts](https://github.com/cubefin/helm-charts)** | Easy installation managing all components. | ✅ Stable |
-
-## 🚀 Getting Started
-
-Deploy the full stack to your Kubernetes cluster in minutes using Helm.
-
-```bash
-# Add the Cubefin Helm repository
-helm repo add cubefin https://cubefin.github.io/helm-charts
-helm repo update
-
-# Install Cubefin Stack
-helm upgrade --install cubefin cubefin/cubefin-cluster \
-  --namespace cubefin-system \
-  --create-namespace \
-  --set global.cluster.token="YOUR_TOKEN"
-```
-
-## 🤝 Community & Support
-
-- **Website**: [https://cubefin.io](https://cubefin.io)
-- **Documentation**: [https://docs.cubefin.io](https://docs.cubefin.io)
-- **Issues**: Please file issues in the respective component repositories.
-- **Email**: [admin@cubefin.io](mailto:admin@cubefin.io)
 
 ---
 
-<div align="center">
-  <sub>Built with ❤️ by the Cubefin Team</sub>
-</div>
+## Core Services
+
+| Service | Description | Repository |
+|---------|-------------|------------|
+| **Platform** | 중앙 관리 콘솔 및 API 서버 | [cubefin/platform](https://github.com/cubefin/platform) |
+| **Agent** | K8s 메트릭 수집 에이전트 | [cubefin/agent](https://github.com/cubefin/agent) |
+| **Insight** | Private LLM 기반 AI 분석 | [cubefin/insight](https://github.com/cubefin/insight) |
+| **Auth** | 통합 인증/인가 (Edge Gateway + ReBAC) | [cubefin/auth](https://github.com/cubefin/auth) |
+
+---
+
+## Quick Start
+
+```bash
+# Hub 클러스터
+helm install cubefin-platform oci://ghcr.io/cubefin/cubefin-platform -n cubefin --create-namespace
+helm install cubefin-auth oci://ghcr.io/cubefin/cubefin-auth -n cubefin
+
+# 타겟 클러스터
+helm install cubefin-cluster oci://ghcr.io/cubefin/cubefin-cluster -n cubefin --create-namespace
+helm install cubefin-insight oci://ghcr.io/cubefin/cubefin-insight -n cubefin
+```
+
+👉 **설치 가이드**: [cubefin/helm-charts](https://github.com/cubefin/helm-charts)
+
+---
+
+<p align="center">
+  <sub>Copyright © 2026 CubeFin. All rights reserved.</sub>
+</p>
