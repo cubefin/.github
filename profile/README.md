@@ -203,6 +203,12 @@ graph TB
 | **Insight** | [insight.demo.cubefin.io](https://insight.demo.cubefin.io) | AI 분석 데모 - 자연어 질의 체험 |
 | **Auth** | [auth.demo.cubefin.io](https://auth.demo.cubefin.io) | 인증/인가 데모 - ReBAC 권한 관리 |
 
+**Auth 데모 계정:**
+| 계정 | 비밀번호 | 역할 |
+|------|----------|------|
+| `admin` | `password` | 관리자 |
+| `alice`, `bob`, `charlie`, `dave` | `password` | 일반 사용자 |
+
 ---
 
 ## License
