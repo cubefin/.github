@@ -14,7 +14,8 @@
   <a href="#key-capabilities">Key Capabilities</a> •
   <a href="#core-services">Core Services</a> •
   <a href="#architecture">Architecture</a> •
-  <a href="#getting-started">Getting Started</a>
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#demo">Demo</a>
 </p>
 
 ---
@@ -192,6 +193,15 @@ graph TB
 | `cubefin-auth` | 인증/인가 서비스 | Hub 클러스터 |
 
 👉 **설치 가이드**: [cubefin/helm-charts](https://github.com/cubefin/helm-charts)
+
+---
+
+## Demo
+
+| 서비스 | 데모 사이트 | 설명 |
+|--------|-------------|------|
+| **Insight** | [insight.demo.cubefin.io](https://insight.demo.cubefin.io) | AI 분석 데모 - 자연어 질의 체험 |
+| **Auth** | [auth.demo.cubefin.io](https://auth.demo.cubefin.io) | 인증/인가 데모 - ReBAC 권한 관리 |
 
 ---
 
